@@ -4,7 +4,6 @@ import random
 import bottle
 import numpy as np
 from Snake import snake
-#from SnakeOld import snake
 
 from api import ping_response, start_response, move_response, end_response
 
@@ -58,11 +57,12 @@ def get_direction(d):
         if d == dirs[i]:
             return directions[i]
 
-def validate(snake, path):
+def validate(snake, path, thresh=0.7):
     valid = True
     for point in path:
         if not snake.can_move(point):
             valid = False
+    valid = valid and snake.calc_conn(path[-1]) >= thresh
     return valid
 
 
