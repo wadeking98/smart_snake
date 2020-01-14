@@ -63,7 +63,6 @@ def validate(snake, path, thresh=20):
         if not snake.can_move(point):
             valid = False
     valid = valid and snake.calc_conn(path[-1]) >= thresh
-    print(snake.calc_conn(path[-1]), path[-1])
     return valid
 
 
@@ -84,10 +83,6 @@ def move():
     if (len(PATH) <=1) or not validate(s,PATH[1:]):
         PATH = []
         success = s.DLS(s.get_head(), PATH, np.zeros(s.board.shape),lim=s.data['you']['health']-1,thresh=0)
-        print(PATH)
-    else:
-        print(PATH)
-        print("PATH REUSE")
     
     
         
