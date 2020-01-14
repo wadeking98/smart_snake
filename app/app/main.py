@@ -72,7 +72,7 @@ def move():
     s = snake(data)
 
     path = []
-    success = s.DLS(s.get_head(), path, np.zeros(s.board.shape),lim=s.data['you']['health']/2,thresh=0)
+    success = s.DLS(s.get_head(), path, np.zeros(s.board.shape),lim=s.data['you']['health']-5,thresh=0)
     
         
     print(path)
@@ -89,9 +89,10 @@ def move():
     #     direction = random.choice(directions)
     choices = s.get_adj(s.get_head())
     if len(choices)>0:
-        choices_sorted = s.sort(choices, lambda e_1, e_2: self.calc_conn(e_1) > self.calc_conn(e_2))
+        choices_sorted = s.sort(choices, lambda e_1, e_2: s.calc_conn(e_1) > s.calc_conn(e_2))
         choice = choices_sorted[0]
         choice_d = s.get_dir(s.get_head(), choice)
+        print(choices_sorted)
         return move_response(get_direction(choice_d))
     
     print(data)
