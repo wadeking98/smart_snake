@@ -62,7 +62,7 @@ class snake:
         @return (bool) true if point is within the bounds of the game board,
         not occupied by a snake, and not beside the head of an enemy snake
         """
-        if not self.in_bounds(point) or (not panic or self.beside_head(point)):
+        if not self.in_bounds(point) or (panic or self.beside_head(point)):
             return False
         else:
             return self.board[point[0]][point[1]] != 1
