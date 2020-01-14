@@ -57,12 +57,12 @@ def get_direction(d):
         if d == dirs[i]:
             return directions[i]
 
-def validate(snake, path, thresh=20):
+def validate(snake, path, thresh=15):
     valid = True
     for point in path:
         if not snake.can_move(point):
             valid = False
-    valid = valid and snake.calc_conn(path[-1]) >= thresh
+    valid = valid and snake.calc_conn(path[-1],lim=thresh) >= thresh
     return valid
 
 
@@ -83,6 +83,8 @@ def move():
     if (len(PATH) <=1) or not validate(s,PATH[1:]):
         PATH = []
         success = s.DLS(s.get_head(), PATH, np.zeros(s.board.shape),lim=s.data['you']['health']-1,thresh=0)
+    else:
+        print("PATH REUSE")
     
     
         

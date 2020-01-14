@@ -116,7 +116,7 @@ class snake:
         return ret
 
 
-    def calc_conn(self, point, lim=10):
+    def calc_conn(self, point, lim=15):
         """
         @param (tuple) point, the point in question
         @param (int) lim, max iterations
