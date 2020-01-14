@@ -57,12 +57,13 @@ def get_direction(d):
         if d == dirs[i]:
             return directions[i]
 
-def validate(snake, path, thresh=0.7):
+def validate(snake, path, thresh=20):
     valid = True
     for point in path:
         if not snake.can_move(point):
             valid = False
     valid = valid and snake.calc_conn(path[-1]) >= thresh
+    print(snake.calc_conn(path[-1]), path[-1])
     return valid
 
 

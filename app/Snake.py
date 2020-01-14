@@ -107,21 +107,16 @@ class snake:
         return ret
 
 
-    def calc_conn(self, point, lim=15):
+    def calc_conn(self, point, lim=10):
         """
         @param (tuple) point, the point in question
         @param (int) lim, max iterations
-        @return (float)  percentage of free tiles is this point connected to
+        @return (int)  number of free tiles is this point connected to
         """
         
         # calculate the total number of free tiles
-        total_free = 0
         explored = np.zeros(self.board.shape)
 
-        for row in self.board:
-            for col in row:
-                if col != 1:
-                    total_free += 1
         
 
         #initialize queue
@@ -140,7 +135,7 @@ class snake:
                 total_conn += 1
                 self.pt_union(queue,adj,0)
             lim -= 1
-        return total_conn/total_free
+        return total_conn
     
 
     def deg(self, point):
@@ -151,7 +146,7 @@ class snake:
         return len(self.get_adj(point))
 
 
-    def DLS(self, curr, path, explored, lim=100, thresh=0.7):
+    def DLS(self, curr, path, explored, lim=100, thresh=20):
         """
         finds a DLS path that favours more connected spaces
         @param (tuple) curr, the current point
