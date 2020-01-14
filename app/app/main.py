@@ -3,12 +3,12 @@ import os
 import random
 import bottle
 import numpy as np
-#from Snake import snake
 from Snake import snake
+#from SnakeOld import snake
 
 from api import ping_response, start_response, move_response, end_response
 
-
+PATH = []
 
 @bottle.route('/')
 def index():
@@ -58,6 +58,13 @@ def get_direction(d):
         if d == dirs[i]:
             return directions[i]
 
+def validate(snake, path):
+    valid = True
+    for point in path:
+        if not snake.can_move(point):
+            valid = False
+    return valid
+
 
 
 @bottle.post('/move')
@@ -70,33 +77,43 @@ def move():
             snake AI must choose a direction to move in.
     """
     s = snake(data)
+    global PATH
+    success = True
 
-    path = []
-    success = s.DLS(s.get_head(), path, np.zeros(s.board.shape),lim=s.data['you']['health']-5,thresh=0)
+    if (len(PATH) <=1) or not validate(s,PATH[1:]):
+        PATH = []
+        success = s.DLS(s.get_head(), PATH, np.zeros(s.board.shape),lim=s.data['you']['health']-1,thresh=0)
+        print(PATH)
+    else:
+        print(PATH)
+        print("PATH REUSE")
+    
     
         
-    print(path)
 
     if success:
-        d = s.get_dir(path[0], path[1])
+        d = s.get_dir(PATH[0], PATH[1])
         print(get_direction(d))
+        PATH = PATH[1:]
         return move_response(get_direction(d))
         
-    directions = ['up', 'down', 'left', 'right']
-    direction = random.choice(directions)
+    
+    # choices = s.get_adj(s.get_head())
+    # if len(choices)>0:
+    #     choices_sorted = s.sort(choices, lambda e_1, e_2: s.calc_conn(e_1) > s.calc_conn(e_2))
+    #     choice = choices_sorted[0]
+    #     choice_d = s.get_dir(s.get_head(), choice)
+    #     print(choices_sorted)
+    #     return move_response(get_direction(choice_d))
 
-    # while not s.can_move(s.add_points(s.get_head(), s.DIRS_KEY[direction]),):
-    #     direction = random.choice(directions)
     choices = s.get_adj(s.get_head())
     if len(choices)>0:
-        choices_sorted = s.sort(choices, lambda e_1, e_2: s.calc_conn(e_1) > s.calc_conn(e_2))
-        choice = choices_sorted[0]
+        choice = random.choice(choices)
         choice_d = s.get_dir(s.get_head(), choice)
-        print(choices_sorted)
         return move_response(get_direction(choice_d))
     
-    print(data)
-    
+    directions = ['up', 'down', 'left', 'right']
+    direction = random.choice(directions)
 
     return move_response(direction)
 

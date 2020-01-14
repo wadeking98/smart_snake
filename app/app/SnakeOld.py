@@ -107,12 +107,13 @@ class snake:
         return ret
 
 
-    def calc_conn(self, point, lim=5):
+    def calc_conn(self, point, lim=15):
         """
         @param (tuple) point, the point in question
         @param (int) lim, max iterations
         @return (float)  percentage of free tiles is this point connected to
         """
+        
         # calculate the total number of free tiles
         total_free = 0
         explored = np.zeros(self.board.shape)
@@ -128,7 +129,7 @@ class snake:
         explored[point[0]][point[1]] = 1
 
         total_conn = 0 if self.board[point[0]][point[1]] == 1 else 1
-        while len(queue) > 0 and lim>0:
+        while len(queue) > 0 and lim > 0:
             curr = queue.pop()
             adjs = self.get_adj(curr)
 
@@ -139,7 +140,6 @@ class snake:
                 total_conn += 1
                 self.pt_union(queue,adj,0)
             lim -= 1
-                
         return total_conn/total_free
     
 
@@ -280,6 +280,3 @@ class snake:
     
 
 
-
-
-    
