@@ -72,16 +72,7 @@ def move():
     s = snake(data)
 
     path = []
-    success = s.DLS(s.get_head(), path, np.zeros(s.board.shape),lim=s.data['you']['health'])
-    if not success:
-        conn_arr = [s.calc_conn(x) for x in s.get_adj(s.get_head())]
-        try:
-            success = s.DLS(s.get_head(), path, np.zeros(s.board.shape),lim=s.data['you']['health'],thresh=np.max(conn_arr))
-        except ValueError:
-            pass
-        if not success:
-            success = s.DLS(s.get_head(), path, np.zeros(s.board.shape),lim=s.data['you']['health'],thresh=0)
-        
+    success = s.DLS(s.get_head(), path, np.zeros(s.board.shape),lim=s.data['you']['health'],thresh=0)
     
         
     print(path)
