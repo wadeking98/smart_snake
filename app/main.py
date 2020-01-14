@@ -85,6 +85,9 @@ def move():
         success = s.DLS(s.get_head(), PATH, np.zeros(s.board.shape),lim=s.data['you']['health']-1,thresh=0)
     else:
         print("PATH REUSE")
+
+    if not success:
+        success = s.DLS(s.get_head(), PATH, np.zeros(s.board.shape),lim=s.data['you']['health']-1,thresh=0,panic=True)
     
     
         

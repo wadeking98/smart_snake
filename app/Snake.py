@@ -54,14 +54,15 @@ class snake:
         """
         return point[0] in range(len(self.board)) and point[1] in range(len(self.board[0]))
 
-    def can_move(self, point):
+    def can_move(self, point, panic=False):
         """
         @param (tuple) point, the point in question
         @param (numpy[][]) board, the game board
+        @param (bool) panic, allows snake to make more dangerous moves
         @return (bool) true if point is within the bounds of the game board,
         not occupied by a snake, and not beside the head of an enemy snake
         """
-        if not self.in_bounds(point) or self.beside_head(point):
+        if not self.in_bounds(point) or (not panic or self.beside_head(point)):
             return False
         else:
             return self.board[point[0]][point[1]] != 1
@@ -103,7 +104,7 @@ class snake:
             pt_set.insert(idx, elem)
 
 
-    def get_adj(self,point):
+    def get_adj(self,point, panic=False):
         """
         @param (tuple) point, the point in question
         @return (list) the list of available moves
@@ -111,7 +112,7 @@ class snake:
         ret = []
         for dir in self.DIRS:
             adj_pt = self.add_points(dir,point)
-            if self.can_move(adj_pt):
+            if self.can_move(adj_pt, panic=panic):
                 ret.append(adj_pt)
         return ret
 
@@ -155,7 +156,7 @@ class snake:
         return len(self.get_adj(point))
 
 
-    def DLS(self, curr, path, explored, lim=100, thresh=20):
+    def DLS(self, curr, path, explored, lim=100, thresh=20, panic=False):
         """
         finds a DLS path that favours more connected spaces
         @param (tuple) curr, the current point
@@ -175,7 +176,7 @@ class snake:
 
 
         #get adj spaces we can move to
-        adjs = self.get_adj(curr)
+        adjs = self.get_adj(curr,panic=panic)
         adjs_cleaned = [x for x in adjs if not explored[x[0]][x[1]]]
         random.shuffle(adjs_cleaned)
 
