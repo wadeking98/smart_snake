@@ -7,6 +7,7 @@ class snake:
     def __init__(self, data):
         self.DIRS = [(-1,0),(1,0),(0,-1),(0,1)]
         self.DIRS_KEY = {"up":(-1,0),"down":(1,0),"left":(0,-1),"right":(0,1)}
+        self.DIRS_DIAG = [(-1,-1),(1,1),(-1,1),(1,-1)]+self.DIRS
         self.data = data
         self.board = self.gen_board()
 
@@ -19,9 +20,9 @@ class snake:
         @param (numpy[][]) board, the game board
         @return (bool) true if the point in question is next to an enemy head
         """
-        for drc in self.DIRS:
-            check = point+drc
-            if self.board[check[0]][check[1]] == 2:
+        for drc in self.DIRS_DIAG:
+            check = self.add_points(point,drc)
+            if self.in_bounds(check) and self.board[check[0]][check[1]] == 2:
                 return True
         return False
 
@@ -39,11 +40,19 @@ class snake:
         """
         ret = []
         if len(pt_a) != len(pt_b):
+            print(pt_a,pt_b)
             return None
         else:
             for i in range(len(pt_a)):
                 ret.append(pt_a[i]+pt_b[i])
         return tuple(ret)
+
+    def in_bounds(self, point):
+        """
+        @param (tuple) point the point in question
+        @param (bool) True if point is on the board
+        """
+        return point[0] in range(len(self.board)) and point[1] in range(len(self.board[0]))
 
     def can_move(self, point):
         """
@@ -52,7 +61,7 @@ class snake:
         @return (bool) true if point is within the bounds of the game board,
         not occupied by a snake, and not beside the head of an enemy snake
         """
-        if not point[0] in range(len(self.board)) or not point[1] in range(len(self.board[0])) or self.beside_head(point):
+        if not self.in_bounds(point) or self.beside_head(point):
             return False
         else:
             return self.board[point[0]][point[1]] != 1

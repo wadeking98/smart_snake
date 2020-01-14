@@ -44,6 +44,26 @@ if __name__ == "__main__":
                         {'x': 1, 'y': 10}, 
                         {'x': 1, 'y': 10}
                     ]
+                },
+
+                {
+                    'id': 'f8c6a952-b287-4671-9b19-1f9cbb5c74ee', 
+                    'name': 'snake', 
+                    'health': 100, 
+                    'body': [
+                        {'x': 14, 'y': 1}, 
+                        {'x': 14, 'y': 2}, 
+                        {'x': 14, 'y': 3}, 
+                        {'x': 13, 'y': 3}, 
+                        {'x': 13, 'y': 2}, 
+                        {'x': 13, 'y': 1}, 
+                        {'x': 12, 'y': 1}, 
+                        {'x': 12, 'y': 0}, 
+                        {'x': 11, 'y': 0}, 
+                        {'x': 10, 'y': 0}, 
+                        {'x': 10, 'y': 1}, 
+                        {'x': 10, 'y': 1}
+                    ]
                 }
             ]
         }, 
@@ -103,3 +123,6 @@ if __name__ == "__main__":
     ts.DLS((0,0),path,np.zeros(ts.board.shape))
     print(path)
     print(ts.get_dir(path[0], path[1]))
+
+    print(ts.beside_head((0,14)))
+    print(ts.beside_head((0,13)))
