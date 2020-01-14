@@ -85,8 +85,14 @@ def move():
     directions = ['up', 'down', 'left', 'right']
     direction = random.choice(directions)
 
-    while not s.can_move(s.add_points(s.get_head(), s.DIRS_KEY[direction]),):
-        direction = random.choice(directions)
+    # while not s.can_move(s.add_points(s.get_head(), s.DIRS_KEY[direction]),):
+    #     direction = random.choice(directions)
+    choices = s.get_adj(s.get_head())
+    if len(choices)>0:
+        choices_sorted = s.sort(choices, lambda e_1, e_2: self.calc_conn(e_1) > self.calc_conn(e_2))
+        choice = choices_sorted[0]
+        choice_d = s.get_dir(s.get_head(), choice)
+        return move_response(get_direction(choice_d))
     
     print(data)
     
