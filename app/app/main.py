@@ -3,8 +3,8 @@ import os
 import random
 import bottle
 import numpy as np
+#from Snake import snake
 from Snake import snake
-
 
 from api import ping_response, start_response, move_response, end_response
 
