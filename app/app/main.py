@@ -72,7 +72,7 @@ def move():
     s = snake(data)
 
     path = []
-    success = s.DLS(s.get_head(), path, np.zeros(s.board.shape),lim=s.data['you']['health']-1,thresh=0)
+    success = s.DLS(s.get_head(), path, np.zeros(s.board.shape),lim=s.data['you']['health']/2,thresh=0)
     
         
     print(path)
