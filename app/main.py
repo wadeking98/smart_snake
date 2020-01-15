@@ -107,6 +107,8 @@ def move():
         
     
     choices = s.get_adj(s.get_head())
+    if len(choices)<= 0:
+        choices = s.get_adj(s.get_head(),panic=True)
     if len(choices)>0:
         choices_sorted = s.sort(choices, lambda e_1, e_2: s.calc_conn(e_1) > s.calc_conn(e_2))
         choice = choices_sorted[0]
