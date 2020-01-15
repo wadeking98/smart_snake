@@ -44,9 +44,13 @@ def start():
             request's data if necessary.
     """
 
-    color = "#505565"
+    color = "#DC7633"
 
-    return start_response(color)
+    return {
+            "color": "#58D68D",
+            "headType": "fang",
+            "tailType": "hook"
+            }
 
 
 def get_direction(d):
