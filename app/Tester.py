@@ -130,3 +130,9 @@ if __name__ == "__main__":
     ts.DLS((0,14),path,np.zeros(ts.board.shape),panic=True)
     print(path)
 
+    print()
+
+    print("testing get adj panic mode")
+    print(ts.get_adj((0,13)))
+    print(ts.get_adj((0,13),panic=True))
+
