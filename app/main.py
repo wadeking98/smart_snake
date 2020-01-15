@@ -81,39 +81,67 @@ def move():
     """
     s = snake(data)
     global PATH
-    success = True
+    success = False
+    success_panic = False
+    thresh = 15
+    response = None
 
-    if (len(PATH) <=1) or not validate(s,PATH):
+    # find path that is well connected, return false if end point is not well connected
+    if (len(PATH) <=1) or not validate(s,PATH, thresh=thresh): #recalc path
         PATH = []
-        success = s.DLS(s.get_head(), PATH, np.zeros(s.board.shape),lim=s.data['you']['health']-1,thresh=0)
-    else:
-        print("PATH REUSE")
 
-    if not success:
-        print("PANIC")
-        PATH = []
-        success = s.DLS(s.get_head(), PATH, np.zeros(s.board.shape),lim=s.data['you']['health']-1,thresh=0,panic=True)
-        print(PATH)
-    
-    
+        #find a good dls path
+        if s.DLS(s.get_head(), PATH, np.zeros(s.board.shape),lim=s.data['you']['health']-1,thresh=thresh):
+            d = s.get_dir(PATH[0], PATH[1])
+            PATH = PATH[1:]
+            print("DLS:",get_direction(d))
+            response = get_direction(d)
+
+        #move to a well connected tile
+        elif len(s.get_adj(s.get_head()))>0:
+            choices_sorted = s.sort(s.get_adj(s.get_head()), lambda e_1, e_2: s.calc_conn(e_1) > s.calc_conn(e_2))
+            choice = choices_sorted[0]
+            choice_d = s.get_dir(s.get_head(), choice)
+            print("ADJ: ",choices_sorted, get_direction(choice_d))
+            response = get_direction(choice_d)
+
+        #find a potentially poor dls path
+        elif s.DLS(s.get_head(), PATH, np.zeros(s.board.shape),lim=s.data['you']['health']-1,thresh=thresh,panic=True):
+            d = s.get_dir(PATH[0], PATH[1])
+            print("DLS PANIC:",get_direction(d))
+            PATH = PATH[1:]
+            response = get_direction(d)
+
+        #move to a potentially poorly connected tile
+        elif len(s.get_adj(s.get_head(),panic=True))>0:
+            choices_sorted = s.sort(s.get_adj(s.get_head(),panic=True), lambda e_1, e_2: s.calc_conn(e_1) > s.calc_conn(e_2))
+            choice = choices_sorted[0]
+            choice_d = s.get_dir(s.get_head(), choice)
+            print("ADJ PANIC: ",choices_sorted, get_direction(choice_d))
+            response = get_direction(choice_d)
         
+        #move randomly
+        else:
+            directions = ['up', 'down', 'left', 'right']
+            response = random.choice(directions)
 
-    if success:
+    else:#increment the path
+        print("PATH REUSE")
         d = s.get_dir(PATH[0], PATH[1])
         print(get_direction(d))
         PATH = PATH[1:]
-        return move_response(get_direction(d))
+        response = get_direction(d)
+    
+    return move_response(response)
+
+    
+    
+        
+
+    
         
     
-    choices = s.get_adj(s.get_head())
-    if len(choices)<= 0:
-        choices = s.get_adj(s.get_head(),panic=True)
-    if len(choices)>0:
-        choices_sorted = s.sort(choices, lambda e_1, e_2: s.calc_conn(e_1) > s.calc_conn(e_2))
-        choice = choices_sorted[0]
-        choice_d = s.get_dir(s.get_head(), choice)
-        print("ADJ: ",choices_sorted, get_direction(choice_d))
-        return move_response(get_direction(choice_d))
+    
 
     
     
