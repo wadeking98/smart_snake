@@ -126,3 +126,9 @@ if __name__ == "__main__":
 
     print(ts.beside_head((0,14)))
     print(ts.beside_head((0,13)))
+
+    print()
+
+    print(ts.can_move((0,14)))
+    print(ts.can_move((0,14),panic=True))
+
