@@ -106,19 +106,15 @@ def move():
         return move_response(get_direction(d))
         
     
-    # choices = s.get_adj(s.get_head())
-    # if len(choices)>0:
-    #     choices_sorted = s.sort(choices, lambda e_1, e_2: s.calc_conn(e_1) > s.calc_conn(e_2))
-    #     choice = choices_sorted[0]
-    #     choice_d = s.get_dir(s.get_head(), choice)
-    #     print(choices_sorted)
-    #     return move_response(get_direction(choice_d))
-
     choices = s.get_adj(s.get_head())
     if len(choices)>0:
-        choice = random.choice(choices)
+        choices_sorted = s.sort(choices, lambda e_1, e_2: s.calc_conn(e_1) > s.calc_conn(e_2))
+        choice = choices_sorted[0]
         choice_d = s.get_dir(s.get_head(), choice)
+        print("ADJ: ",choices_sorted)
         return move_response(get_direction(choice_d))
+
+    
     
     directions = ['up', 'down', 'left', 'right']
     direction = random.choice(directions)

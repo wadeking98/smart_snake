@@ -57,12 +57,7 @@ if __name__ == "__main__":
                         {'x': 13, 'y': 3}, 
                         {'x': 13, 'y': 2}, 
                         {'x': 13, 'y': 1}, 
-                        {'x': 12, 'y': 1}, 
-                        {'x': 12, 'y': 0}, 
-                        {'x': 11, 'y': 0}, 
-                        {'x': 10, 'y': 0}, 
-                        {'x': 10, 'y': 1}, 
-                        {'x': 10, 'y': 1}
+                        {'x': 12, 'y': 1}
                     ]
                 }
             ]
@@ -131,4 +126,7 @@ if __name__ == "__main__":
 
     print(ts.can_move((0,14)))
     print(ts.can_move((0,14),panic=True))
+    path = []
+    ts.DLS((0,14),path,np.zeros(ts.board.shape),panic=True)
+    print(path)
 
