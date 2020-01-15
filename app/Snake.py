@@ -7,7 +7,6 @@ class snake:
     def __init__(self, data):
         self.DIRS = [(-1,0),(1,0),(0,-1),(0,1)]
         self.DIRS_KEY = {"up":(-1,0),"down":(1,0),"left":(0,-1),"right":(0,1)}
-        self.DIRS_DIAG = [(-1,-1),(1,1),(-1,1),(1,-1)]+self.DIRS
         self.data = data
         self.board = self.gen_board()
 
@@ -20,7 +19,7 @@ class snake:
         @param (numpy[][]) board, the game board
         @return (bool) true if the point in question is next to an enemy head
         """
-        for drc in self.DIRS_DIAG:
+        for drc in self.DIRS:
             check = self.add_points(point,drc)
             if self.in_bounds(check) and self.board[check[0]][check[1]] == 2:
                 return True
