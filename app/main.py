@@ -111,7 +111,7 @@ def move():
         choices_sorted = s.sort(choices, lambda e_1, e_2: s.calc_conn(e_1) > s.calc_conn(e_2))
         choice = choices_sorted[0]
         choice_d = s.get_dir(s.get_head(), choice)
-        print("ADJ: ",choices_sorted)
+        print("ADJ: ",choices_sorted, get_direction(choice_d))
         return move_response(get_direction(choice_d))
 
     
