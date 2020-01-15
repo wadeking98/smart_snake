@@ -3,6 +3,7 @@ import os
 import random
 import bottle
 import numpy as np
+import time
 from Snake import snake
 
 from api import ping_response, start_response, move_response, end_response
@@ -73,6 +74,9 @@ def validate(snake, path, thresh=15):
 @bottle.post('/move')
 def move():
     data = bottle.request.json
+
+    start_time = time.time()
+
     print(data['turn'])
 
     """
@@ -131,7 +135,9 @@ def move():
         print(get_direction(d))
         PATH = PATH[1:]
         response = get_direction(d)
-    
+
+    end_time = time.time()
+    print(str((end_time-start_time)*1000)+"ms")
     return move_response(response)
 
     
