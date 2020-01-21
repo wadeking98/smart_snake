@@ -5,6 +5,7 @@ import bottle
 import numpy as np
 import time
 from Snake import snake
+from Node import node
 
 from api import ping_response, start_response, move_response, end_response
 
@@ -85,9 +86,8 @@ def move():
     """
     s = snake(data)
     global PATH
-    success = False
-    success_panic = False
     thresh = 15
+    search_type = 0 if (data["turn"] < 75) and len(data["board"]["snakes"]) > 1 else -1
     response = None
 
     # find path that is well connected, return false if end point is not well connected
@@ -95,10 +95,13 @@ def move():
         PATH = []
 
         #find a good dls path
-        if s.DLS(s.get_head(), PATH, np.zeros(s.board.shape),lim=s.data['you']['health']-1,thresh=thresh):
+        goal_n = s.LS(search_type, [node(s.get_head())], np.zeros(s.board.shape), lim=s.data['you']['health']-1, thresh=thresh)
+        goal_n_poor = s.LS(search_type, [node(s.get_head())], np.zeros(s.board.shape), lim=s.data['you']['health']-1, thresh=thresh,panic=True)
+        if goal_n is not None:
+            PATH = goal_n.traceback()
             d = s.get_dir(PATH[0], PATH[1])
             PATH = PATH[1:]
-            print("DLS:",get_direction(d))
+            print("LS:",PATH,get_direction(d))
             response = get_direction(d)
 
         #move to a well connected tile
@@ -110,9 +113,10 @@ def move():
             response = get_direction(choice_d)
 
         #find a potentially poor dls path
-        elif s.DLS(s.get_head(), PATH, np.zeros(s.board.shape),lim=s.data['you']['health']-1,thresh=thresh,panic=True):
+        elif goal_n_poor is not None:
+            PATH = goal_n_poor.traceback()
             d = s.get_dir(PATH[0], PATH[1])
-            print("DLS PANIC:",get_direction(d))
+            print("LS PANIC:",get_direction(d))
             PATH = PATH[1:]
             response = get_direction(d)
 

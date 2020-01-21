@@ -1,4 +1,5 @@
 from Snake import snake
+from Node import node
 import numpy as np
 
 #used primarily as a tester
@@ -49,7 +50,7 @@ if __name__ == "__main__":
                 {
                     'id': 'f8c6a952-b287-4671-9b19-1f9cbb5c74ee', 
                     'name': 'snake', 
-                    'health': 100, 
+                    'health': 99, 
                     'body': [
                         {'x': 14, 'y': 1}, 
                         {'x': 14, 'y': 2}, 
@@ -114,8 +115,11 @@ if __name__ == "__main__":
     print(ts.sort(test_arr_2, lambda e_1, e_2: ts.calc_conn(e_1)>ts.calc_conn(e_2)))
 
     print()
+    print("testing dls")
     path = []
-    ts.DLS((0,0),path,np.zeros(ts.board.shape))
+    dls_root = node((0,0))
+    goal_n = ts.LS(-1,[dls_root],np.zeros(ts.board.shape))
+    path = goal_n.traceback()
     print(path)
     print(ts.get_dir(path[0], path[1]))
 
@@ -126,8 +130,7 @@ if __name__ == "__main__":
 
     print(ts.can_move((0,14)))
     print(ts.can_move((0,14),panic=True))
-    path = []
-    ts.DLS((0,14),path,np.zeros(ts.board.shape),panic=True)
+    path = ts.LS(-1,[node((0,0))],np.zeros(ts.board.shape),panic=True).traceback()
     print(path)
 
     print()
@@ -135,4 +138,37 @@ if __name__ == "__main__":
     print("testing get adj panic mode")
     print(ts.get_adj((0,13)))
     print(ts.get_adj((0,13),panic=True))
+
+    print()
+
+    print("testing tree building")
+    root = node((0,0))
+    n1 = node((1,0))
+    n2 = node((2,0))
+    root.attach(n1)
+    print(n1.parent)
+    print(n1.children)
+    n1.attach(n2)
+    print(root)
+    print(n2.traceback())
+
+
+    print()
+
+    print("testing BLS")
+    test_root = node((0,0))
+    goal_n = ts.LS(0,[test_root],np.zeros(ts.board.shape))
+    print(goal_n.traceback())
+
+    print()
+    print("testing get snake")
+    print(ts.get_snake((1,14),0))
+
+    print()
+    print("testing can eat")
+    print(ts.can_eat((1,14)))
+
+    print()
+    print("testing can_move_tail")
+    print(ts.can_move_tail((1,12)))
 

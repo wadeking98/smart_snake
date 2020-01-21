@@ -1,5 +1,7 @@
 import numpy as np
 import random
+from Node import node
+
 
 class snake:
     
@@ -11,7 +13,39 @@ class snake:
         self.board = self.gen_board()
 
 
+    def get_snake(self, point, pt_type):
+        """
+        @param (tuple) point, a point belonging to some snake
+        @param (int) pt_type, the type of point specified for the search,
+        -1 if tail, 0 if head
+        @return (dict) the snake to which the point belongs
+        """
+        for snake in self.data["board"]["snakes"]:
+            if self.pt_eq((snake["body"][pt_type]["y"],snake["body"][pt_type]["x"]),point):
+                return snake
+        return None
 
+    def can_move_tail(self, point):
+        """
+        @param (tuple) point, the point in question
+        @return (bool) true if the point is a tail and the snake it
+        belongs to did not just eat a food
+        """
+        snake = self.get_snake(point,-1)
+        if snake is None:#if not a tail or does not belong to any snake
+            return False
+        else:
+            return snake["health"] < 100
+
+    def can_eat(self, head):
+        """
+        @param (tuple) head, the head of the snake in question
+        @return (bool) true if the enemy snake has less health than our snake
+        """
+        assert self.board[head[0]][head[1]] == 2
+        enemy_len = len(self.get_snake(head, 0)["body"])
+        self_len = len(self.data["you"]["body"])
+        return self_len > enemy_len
 
     def beside_head(self,point):
         """
@@ -21,7 +55,7 @@ class snake:
         """
         for drc in self.DIRS:
             check = self.add_points(point,drc)
-            if self.in_bounds(check) and self.board[check[0]][check[1]] == 2:
+            if self.in_bounds(check) and self.board[check[0]][check[1]] == 2 and not self.can_eat(check):
                 return True
         return False
 
@@ -64,7 +98,7 @@ class snake:
         if not self.in_bounds(point) or (not panic and self.beside_head(point)):
             return False
         else:
-            return self.board[point[0]][point[1]] != 1
+            return (self.board[point[0]][point[1]] != 1) or self.can_move_tail(point)
     
 
     def pt_eq(self, pt_a, pt_b):
@@ -155,43 +189,39 @@ class snake:
         return len(self.get_adj(point))
 
 
-    def DLS(self, curr, path, explored, lim=100, thresh=20, panic=False):
+
+    def LS(self, search_type, fronteir, explored, lim=100, thresh=20, panic=False):
         """
-        finds a DLS path that favours more connected spaces
-        @param (tuple) curr, the current point
-        @param (list) path, the buffer to hold the path
+        finds a path that favours more connected spaces
+        @param (int) type, the type of search -1 for DLS, 0 for BLS
+        @param (list) fronteir, the list of unexplored nodes to be searched
         @param (numpy[][]) explored, the buffer to hold the explored set
         @param (int) lim, the recursion depth limit 
-        @return (list), list of path points
+        @return (node), the goal node
         """
+        if lim <= 0 or len(fronteir) == 0:
+            return None
+        
+        curr_node = fronteir.pop()
+        curr = curr_node.item
         explored[curr[0]][curr[1]] = 1
 
         if (self.board[curr[0]][curr[1]] == -1) and self.calc_conn(curr) >= thresh:
-            path.append(curr)
-            return True
-        elif lim <=0:
-            explored[curr[0]][curr[1]] = 0
-            return False
+            return curr_node
+        else:
+            #get adj spaces we can move to
+            adjs = self.get_adj(curr,panic=panic)
+            adjs_cleaned = [x for x in adjs if not explored[x[0]][x[1]]]
+            random.shuffle(adjs_cleaned)
 
+            adjs_sorted = self.sort(adjs_cleaned, lambda e_1, e_2: self.calc_conn(e_1) > self.calc_conn(e_2))
 
-        #get adj spaces we can move to
-        adjs = self.get_adj(curr,panic=panic)
-        adjs_cleaned = [x for x in adjs if not explored[x[0]][x[1]]]
-        random.shuffle(adjs_cleaned)
-
-        #if this one has smaller degree get most connected
-        # if self.deg(curr) < 3:
-        #     adjs_sorted = self.sort(adjs_cleaned, lambda e_1, e_2: self.calc_conn(e_1) > self.calc_conn(e_2))
-        #     adjs_cleaned = adjs_sorted
-        adjs_sorted = self.sort(adjs_cleaned, lambda e_1, e_2: self.calc_conn(e_1) > self.calc_conn(e_2))
-
-        for adj in adjs_sorted:
-            if self.DLS(adj,path,explored,lim-1,thresh):
-                path.insert(0,curr)
-                return True
-
-        explored[curr[0]][curr[1]]
-        return False
+            for adj in adjs_cleaned:
+                adj_n = node(adj)
+                curr_node.attach(adj_n)
+                fronteir.insert(search_type,adj_n)
+            
+            return self.LS(search_type,fronteir, explored, lim=lim-1, thresh=thresh, panic=panic)
 
     
     def get_dir(self, vec_init, vec_final):
