@@ -95,7 +95,7 @@ def move():
         PATH = []
 
         #find a good dls path
-        goal_n = s.LS(search_type, [node(s.get_head())], np.zeros(s.board.shape), lim=s.data['you']['health']-1, thresh=thresh)
+        goal_n = s.LS(search_type, [node(s.get_head())], np.zeros(s.board.shape), np.zeros(s.board.shape),lim=s.data['you']['health']-1, thresh=thresh)
         
         if goal_n is not None:
             PATH = goal_n.traceback()
@@ -114,7 +114,7 @@ def move():
 
         #find a potentially poor dls path
         else:
-            goal_n_poor = s.LS(search_type, [node(s.get_head())], np.zeros(s.board.shape), lim=s.data['you']['health']-1, thresh=thresh,panic=True)
+            goal_n_poor = s.LS(search_type, [node(s.get_head())], np.zeros(s.board.shape), np.zeros(s.board.shape),lim=s.data['you']['health']-1, thresh=thresh,panic=True)
             if goal_n_poor is not None:
                 PATH = goal_n_poor.traceback()
                 d = s.get_dir(PATH[0], PATH[1])

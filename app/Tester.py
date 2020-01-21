@@ -118,9 +118,10 @@ if __name__ == "__main__":
     print("testing dls")
     path = []
     dls_root = node((0,0))
-    goal_n = ts.LS(-1,[dls_root],np.zeros(ts.board.shape))
+    goal_n = ts.LS(-1,[dls_root],np.zeros(ts.board.shape),np.zeros(ts.board.shape),lim=5)
     path = goal_n.traceback()
     print(path)
+    print(goal_n.depth)
     print(ts.get_dir(path[0], path[1]))
 
     print(ts.beside_head((0,14)))
@@ -130,7 +131,7 @@ if __name__ == "__main__":
 
     print(ts.can_move((0,14)))
     print(ts.can_move((0,14),panic=True))
-    path = ts.LS(-1,[node((0,0))],np.zeros(ts.board.shape),panic=True).traceback()
+    path = ts.LS(-1,[node((0,0))],np.zeros(ts.board.shape),np.zeros(ts.board.shape),panic=True).traceback()
     print(path)
 
     print()
@@ -157,8 +158,9 @@ if __name__ == "__main__":
 
     print("testing BLS")
     test_root = node((0,0))
-    goal_n = ts.LS(0,[test_root],np.zeros(ts.board.shape))
+    goal_n = ts.LS(0,[test_root],np.zeros(ts.board.shape),np.zeros(ts.board.shape))
     print(goal_n.traceback())
+    print(goal_n.depth)
 
     print()
     print("testing get snake")

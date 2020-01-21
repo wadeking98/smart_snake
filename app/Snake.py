@@ -191,20 +191,21 @@ class snake:
 
 
 
-    def LS(self, search_type, fronteir, explored, lim=100, thresh=20, panic=False):
+    def LS(self, search_type, fronteir, explored, fronteir_contains, lim=100, thresh=20, panic=False):
         """
         finds a path that favours more connected spaces
         @param (int) type, the type of search -1 for DLS, 0 for BLS
         @param (list) fronteir, the list of unexplored nodes to be searched
         @param (numpy[][]) explored, the buffer to hold the explored set
+        @param (numpy[][]) fronteir_contains, the buffer to mark the points already in the fronteir
         @param (int) lim, the recursion depth limit 
         @return (node), the goal node
         """
-        if lim <= 0 or len(fronteir) == 0:
+        if len(fronteir) == 0 or fronteir[-1].depth > lim:
             return None
-        
         curr_node = fronteir.pop()
         curr = curr_node.item
+        fronteir_contains[curr[0]][curr[1]] = 0
         explored[curr[0]][curr[1]] = 1
 
         if (self.board[curr[0]][curr[1]] == -1) and self.calc_conn(curr) >= thresh:
@@ -212,17 +213,24 @@ class snake:
         else:
             #get adj spaces we can move to
             adjs = self.get_adj(curr,panic=panic)
-            adjs_cleaned = [x for x in adjs if not explored[x[0]][x[1]]]
-            random.shuffle(adjs_cleaned)
+            adjs_cleaned = [x for x in adjs if not explored[x[0]][x[1]] and not fronteir_contains[x[0]][x[1]]]
 
-            adjs_sorted = self.sort(adjs_cleaned, lambda e_1, e_2: self.calc_conn(e_1) > self.calc_conn(e_2))
+            #random.shuffle(adjs_cleaned)
+            
+            adjs_sorted = self.sort(adjs_cleaned, self.compare)
 
             for adj in adjs_cleaned:
                 adj_n = node(adj)
                 curr_node.attach(adj_n)
+                adj_item = adj_n.item
                 fronteir.insert(search_type,adj_n)
-            
-            return self.LS(search_type,fronteir, explored, lim=lim-1, thresh=thresh, panic=panic)
+                fronteir_contains[adj_item[0]][adj_item[1]] = 1 
+                
+        
+            goal_n = self.LS(search_type,fronteir, explored, fronteir_contains,lim=lim, thresh=thresh, panic=panic)
+            if goal_n is None:
+                explored[curr[0]][curr[1]] = 0
+            return goal_n
 
     
     def get_dir(self, vec_init, vec_final):
@@ -240,6 +248,21 @@ class snake:
             subt.append(e_new)
         
         return tuple(subt)
+
+    
+    def compare(self, p1, p2):
+        """
+        @param (tuple) p1, the first point in question
+        @param (tuple) p2, the second point in question
+        @return (bool) true if p1 is more connected than p2
+        or if con(p1)==con(p2) then returns degree(p1) > degree(p2)
+        """
+        val1 = self.calc_conn(p1)
+        val2 = self.calc_conn(p2)
+        if val1 == val2:
+            return self.deg(p1) > self.deg(p2)
+        else:
+            return val1 > val2
 
 
     def sort(self, arr, cmp):

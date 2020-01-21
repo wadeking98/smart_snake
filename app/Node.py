@@ -6,6 +6,7 @@ class node:
         self.item = item
         self.parent = None
         self.children = []
+        self.depth = 0
 
     def attach(self, n):
         """
@@ -13,6 +14,7 @@ class node:
         """
         n.parent = self
         self.children.append(n)
+        n.depth += (1+self.depth)
 
     def traceback(self):
         """
