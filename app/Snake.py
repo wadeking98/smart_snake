@@ -47,15 +47,16 @@ class snake:
         self_len = len(self.data["you"]["body"])
         return self_len > enemy_len
 
-    def beside_head(self,point):
+    def beside_head(self,point, offensive=True):
         """
         @param (tuple) point, the point in question
         @param (numpy[][]) board, the game board
+        @param (bool) offensive, determines if this snake will try to eat smaller snakes
         @return (bool) true if the point in question is next to an enemy head
         """
         for drc in self.DIRS:
             check = self.add_points(point,drc)
-            if self.in_bounds(check) and self.board[check[0]][check[1]] == 2 and not self.can_eat(check):
+            if self.in_bounds(check) and self.board[check[0]][check[1]] == 2 and (not self.can_eat(check) or not offensive):
                 return True
         return False
 
@@ -172,7 +173,7 @@ class snake:
             adjs = self.get_adj(curr)
 
             #all adjacent tiles that we have not already visited
-            adjs_cleaned = [x for x in adjs if not explored[x[0]][x[1]]]
+            adjs_cleaned = [x for x in adjs if not explored[x[0]][x[1]] and not self.beside_head(x,offensive=False)]
             for adj in adjs_cleaned:
                 explored[adj[0]][adj[1]] = 1
                 total_conn += 1
