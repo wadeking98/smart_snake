@@ -215,7 +215,7 @@ class snake:
             adjs = self.get_adj(curr,panic=panic)
             adjs_cleaned = [x for x in adjs if not explored[x[0]][x[1]] and not fronteir_contains[x[0]][x[1]]]
 
-            #random.shuffle(adjs_cleaned)
+            random.shuffle(adjs_cleaned)
             
             adjs_sorted = self.sort(adjs_cleaned, self.compare)
 
