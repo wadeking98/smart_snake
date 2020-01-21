@@ -87,7 +87,7 @@ def move():
     s = snake(data)
     global PATH
     thresh = 15
-    search_type = 0 if (data["turn"] < 75) and len(data["board"]["snakes"]) > 1 else -1
+    search_type = 0 if (data["turn"] < 50) and len(data["board"]["snakes"]) > 1 else -1
     response = None
 
     # find path that is well connected, return false if end point is not well connected
