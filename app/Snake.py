@@ -349,6 +349,12 @@ class snake:
         """
         dims = (self.data["board"]["height"], self.data["board"]["width"])
         new_board = np.zeros(dims)
+            
+        #mark the food
+        foods = self.data["board"]["food"]
+        for food in foods:
+            new_board[food["y"]][food["x"]] = -1
+
 
         #mark the snakes
         snakes = self.data["board"]["snakes"]
@@ -361,11 +367,6 @@ class snake:
             if self.data["you"]["id"] != snake["id"]:
                 head = snake["body"][0]
                 new_board[head["y"]][head["x"]] = 2
-            
-        #mark the food
-        foods = self.data["board"]["food"]
-        for food in foods:
-            new_board[food["y"]][food["x"]] = -1
 
         return new_board
 

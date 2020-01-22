@@ -32,12 +32,8 @@ if __name__ == "__main__":
                     'name': 'snake', 
                     'health': 50, 
                     'body': [
-                        {'x': 7, 'y': 12},
-                        {'x': 7, 'y': 11},
-                        {'x': 6, 'y': 11},
-                        {'x': 5, 'y': 11},
-                        {'x': 5, 'y': 12},
-                        {'x': 4, 'y': 12}
+                        {'x': 8, 'y': 1},
+                        {'x': 7, 'y': 1}
                         
                     ]
                 },
@@ -47,12 +43,8 @@ if __name__ == "__main__":
                     'name': 'snake', 
                     'health': 99, 
                     'body': [
-                        {'x': 14, 'y': 1}, 
-                        {'x': 14, 'y': 2}, 
-                        {'x': 14, 'y': 3}, 
-                        {'x': 13, 'y': 3}, 
-                        {'x': 13, 'y': 2}, 
-                        {'x': 13, 'y': 1}, 
+                        {'x': 10, 'y': 1},
+                        {'x': 11, 'y': 1}, 
                         {'x': 12, 'y': 1}
                     ]
                 },
@@ -75,12 +67,8 @@ if __name__ == "__main__":
             'name': 'snake', 
             'health': 50, 
             'body': [
-                {'x': 7, 'y': 12},
-                {'x': 7, 'y': 11},
-                {'x': 6, 'y': 11},
-                {'x': 5, 'y': 11},
-                {'x': 5, 'y': 12},
-                {'x': 4, 'y': 12}
+                {'x': 8, 'y': 1},
+                {'x': 7, 'y': 1}
             ]
         }
     }
@@ -169,7 +157,7 @@ if __name__ == "__main__":
 
     print()
     print("testing can eat")
-    print(ts.can_eat((1,14)))
+    #print(ts.can_eat((1,14)))
 
     print()
     print("testing can_move_tail")
@@ -188,5 +176,6 @@ if __name__ == "__main__":
 
     print()
     print("testing bug fix for canmove tail")
-    print(ts.can_move_tail((13,7)))
+    print(ts.can_move((1,6)))
+    print(ts.LS(0,[node((1,8))],np.zeros(ts.board.shape),np.zeros(ts.board.shape)).traceback())
 
