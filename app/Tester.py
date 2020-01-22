@@ -63,9 +63,9 @@ if __name__ == "__main__":
                     'name': 'snake', 
                     'health': 58, 
                     'body': [
+                        {'x': 5, 'y': 13},
                         {'x': 6, 'y': 13},
-                        {'x': 7, 'y': 13},
-                        {'x': 8, 'y': 13}
+                        {'x': 7, 'y': 13}
                     ]
                 }
             ]
@@ -185,4 +185,8 @@ if __name__ == "__main__":
     print(ts.can_move((12,6)))
     print(ts.can_move((13,6)))
     print(ts.compare_conn((12,6),(12,5)))
+
+    print()
+    print("testing bug fix for canmove tail")
+    print(ts.can_move_tail((13,7)))
 

@@ -32,9 +32,8 @@ class snake:
         belongs to did not just eat a food
         """
         snake = self.get_snake(point,-1)
-        this_snake = self.data["you"]
 
-        if snake is None or (snake["id"] == this_snake["id"] and len(this_snake["body"]) <= 2):
+        if snake is None or len(snake["body"]) <= 2:
             return False
         else:
             return snake["health"] < 100
