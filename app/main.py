@@ -93,7 +93,9 @@ def move():
     response = None
 
     if data["turn"] == 1:
+        print(s.get_head())
         print(s.board)
+        
 
     # find path that is well connected, return false if end point is not well connected
     if (len(PATH) <=1) or not validate(s,PATH, thresh=thresh): #recalc path
