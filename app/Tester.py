@@ -30,10 +30,15 @@ if __name__ == "__main__":
                 {
                     'id': 'f8c6a952-b287-4671-9b19-1f9cbb5c74ef', 
                     'name': 'snake', 
-                    'health': 100, 
+                    'health': 50, 
                     'body': [
-                        {'x': 1, 'y': 14}, 
-                        {'x': 2, 'y': 14}
+                        {'x': 7, 'y': 12},
+                        {'x': 7, 'y': 11},
+                        {'x': 6, 'y': 11},
+                        {'x': 5, 'y': 11},
+                        {'x': 5, 'y': 12},
+                        {'x': 4, 'y': 12}
+                        
                     ]
                 },
 
@@ -50,16 +55,32 @@ if __name__ == "__main__":
                         {'x': 13, 'y': 1}, 
                         {'x': 12, 'y': 1}
                     ]
+                },
+
+
+                {
+                    'id': 'f8c6a952-b287-4671-9b19-1f9cbb5c74ea', 
+                    'name': 'snake', 
+                    'health': 58, 
+                    'body': [
+                        {'x': 6, 'y': 13},
+                        {'x': 7, 'y': 13},
+                        {'x': 8, 'y': 13}
+                    ]
                 }
             ]
         }, 
         'you': {
             'id': 'f8c6a952-b287-4671-9b19-1f9cbb5c74ef', 
             'name': 'snake', 
-            'health': 100, 
+            'health': 50, 
             'body': [
-                {'x': 1, 'y': 14}, 
-                {'x': 2, 'y': 14}
+                {'x': 7, 'y': 12},
+                {'x': 7, 'y': 11},
+                {'x': 6, 'y': 11},
+                {'x': 5, 'y': 11},
+                {'x': 5, 'y': 12},
+                {'x': 4, 'y': 12}
             ]
         }
     }
@@ -158,4 +179,10 @@ if __name__ == "__main__":
     print()
     print("testing modified canmove")
     print(ts.can_move((14,0)))
+
+    print()
+    print("testing new bug")
+    print(ts.can_move((12,6)))
+    print(ts.can_move((13,6)))
+    print(ts.compare_conn((12,6),(12,5)))
 

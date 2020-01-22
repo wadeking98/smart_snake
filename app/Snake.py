@@ -103,7 +103,7 @@ class snake:
         if not self.in_bounds(point) or (not panic and self.beside_head(point)):
             return False
         else:
-            return (self.board[point[0]][point[1]] != 1) or self.can_move_tail(point)
+            return (self.board[point[0]][point[1]] < 1) or self.can_move_tail(point)
     
 
     def pt_eq(self, pt_a, pt_b):
