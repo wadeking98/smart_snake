@@ -151,7 +151,7 @@ class snake:
         return ret
 
 
-    def calc_conn(self, point, lim=15):
+    def calc_conn_ratio(self, point):
         """
         @param (tuple) point, the point in question
         @param (int) lim, max iterations
@@ -159,27 +159,14 @@ class snake:
         """
         
         # calculate the total number of free tiles
-        explored = np.zeros(self.board.shape)
+        total_free = 0
+        for row in self.board:
+            for entry in row:
+                if entry <= 0:
+                    total_free += 1
 
-        
-
-        #initialize queue
-        queue = [point]
-        explored[point[0]][point[1]] = 1
-
-        total_conn = 0 if self.board[point[0]][point[1]] == 1 else 1
-        while len(queue) > 0 and lim > 0:
-            curr = queue.pop()
-            adjs = self.get_adj(curr)
-
-            #all adjacent tiles that we have not already visited
-            adjs_cleaned = [x for x in adjs if not explored[x[0]][x[1]] and not self.beside_head(x,offensive=False)]
-            for adj in adjs_cleaned:
-                explored[adj[0]][adj[1]] = 1
-                total_conn += 1
-                self.pt_union(queue,adj,0)
-            lim -= 1
-        return total_conn
+        total_conn = self.calc_conn([node(point)],np.zeros(self.board.shape),np.zeros(self.board.shape),0)
+        return total_conn/total_free
     
 
     def deg(self, point):
@@ -190,8 +177,44 @@ class snake:
         return len(self.get_adj(point))
 
 
+    def calc_conn(self, fronteir, explored, fronteir_contains, count):
+        """
+        finds the number of free spaces that this space is connected to
+        @param (list) fronteir, the list of unexplored nodes to be searched
+        @param (numpy[][]) explored, the buffer to hold the explored set
+        @param (numpy[][]) fronteir_contains, the buffer to mark the points already in the fronteir
+        @param (int) count, the current connection count
+        @return (node), the goal node
+        """
+        if len(fronteir) == 0:
+            return count
+        curr_node = fronteir.pop()
+        curr = curr_node.item
+        fronteir_contains[curr[0]][curr[1]] = 0
+        count+=1
+        explored[curr[0]][curr[1]] = 1
 
-    def LS(self, search_type, fronteir, explored, fronteir_contains, lim=100, thresh=20, panic=False):
+        
+        #get adj spaces we can move to
+        adjs = self.get_adj(curr)
+        adjs_cleaned = [x for x in adjs if not explored[x[0]][x[1]] and not fronteir_contains[x[0]][x[1]]]
+
+        random.shuffle(adjs_cleaned)
+        
+
+        for adj in adjs_cleaned:
+            adj_n = node(adj)
+            curr_node.attach(adj_n)
+            adj_item = adj_n.item
+            fronteir.insert(0,adj_n)
+            fronteir_contains[adj_item[0]][adj_item[1]] = 1 
+            
+    
+        return self.calc_conn(fronteir, explored, fronteir_contains, count)
+        
+
+
+    def LS(self, search_type, fronteir, explored, fronteir_contains, lim=100, thresh=0.7, panic=False):
         """
         finds a path that favours more connected spaces
         @param (int) type, the type of search -1 for DLS, 0 for BLS
@@ -208,18 +231,18 @@ class snake:
         fronteir_contains[curr[0]][curr[1]] = 0
         explored[curr[0]][curr[1]] = 1
 
-        if (self.board[curr[0]][curr[1]] == -1) and self.calc_conn(curr) >= thresh:
+        if (self.board[curr[0]][curr[1]] == -1) and self.calc_conn_ratio(curr) >= thresh:
             return curr_node
         else:
             #get adj spaces we can move to
             adjs = self.get_adj(curr,panic=panic)
             adjs_cleaned = [x for x in adjs if not explored[x[0]][x[1]] and not fronteir_contains[x[0]][x[1]]]
 
-            random.shuffle(adjs_cleaned)
+            #random.shuffle(adjs_cleaned)
             
             adjs_sorted = self.sort(adjs_cleaned, self.compare)
 
-            for adj in adjs_cleaned:
+            for adj in adjs_sorted:
                 adj_n = node(adj)
                 curr_node.attach(adj_n)
                 adj_item = adj_n.item
@@ -254,15 +277,23 @@ class snake:
         """
         @param (tuple) p1, the first point in question
         @param (tuple) p2, the second point in question
-        @return (bool) true if p1 is more connected than p2
-        or if con(p1)==con(p2) then returns degree(p1) > degree(p2)
+        @return (bool) true if p1 has higher degree than p2
         """
-        val1 = self.calc_conn(p1)
-        val2 = self.calc_conn(p2)
+        return self.deg(p1) > self.deg(p2)
+
+    def compare_conn(self,p1,p2):
+        """
+        @param (tuple) p1, the first point in question
+        @param (tuple) p2, the second point in question
+        @return (bool) true if p1 has higher connectivity than p2
+        """
+        val1 = self.calc_conn_ratio(p1)
+        val2 = self.calc_conn_ratio(p2)
         if val1 == val2:
-            return self.deg(p1) > self.deg(p2)
+            return self.compare(p1,p2)
         else:
             return val1 > val2
+        
 
 
     def sort(self, arr, cmp):

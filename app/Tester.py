@@ -103,8 +103,8 @@ if __name__ == "__main__":
     print(pt_set)
 
     print()
-    print(ts.calc_conn((14,0)))
-    print(ts.calc_conn((0,0)))
+    print(ts.calc_conn_ratio((14,0)))
+    print(ts.calc_conn_ratio((0,0)))
 
     print()
     test_arr = [3,2,6,1,7,8,6]
@@ -112,13 +112,13 @@ if __name__ == "__main__":
 
     print()
     test_arr_2 = [(0,0),(13,0),(0,1)]
-    print(ts.sort(test_arr_2, lambda e_1, e_2: ts.calc_conn(e_1)>ts.calc_conn(e_2)))
+    print(ts.sort(test_arr_2, lambda e_1, e_2: ts.calc_conn_ratio(e_1)>ts.calc_conn_ratio(e_2)))
 
     print()
     print("testing dls")
     path = []
     dls_root = node((0,0))
-    goal_n = ts.LS(-1,[dls_root],np.zeros(ts.board.shape),np.zeros(ts.board.shape),lim=5)
+    goal_n = ts.LS(-1,[dls_root],np.zeros(ts.board.shape),np.zeros(ts.board.shape))
     path = goal_n.traceback()
     print(path)
     print(goal_n.depth)

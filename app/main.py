@@ -63,11 +63,13 @@ def get_direction(d):
         if d == dirs[i]:
             return directions[i]
 
-def validate(snake, path, thresh=15):
+def validate(snake, path, thresh=0.7):
     valid = snake.get_head() == path[0]
     for point in path[1:]:
-        if not snake.can_move(point) or snake.calc_conn(point, lim=thresh) < thresh:
+        if not snake.can_move(point):
             valid = False
+
+    valid = valid and snake.calc_conn_ratio(path[-1]) >= thresh
     return valid
 
 
@@ -86,9 +88,12 @@ def move():
     """
     s = snake(data)
     global PATH
-    thresh = 15
+    thresh = 0.7
     search_type = 0 if (data["turn"] < 50) and len(data["board"]["snakes"]) > 1 else -1
     response = None
+
+    if data["turn"] == 1:
+        print(s.board)
 
     # find path that is well connected, return false if end point is not well connected
     if (len(PATH) <=1) or not validate(s,PATH, thresh=thresh): #recalc path
@@ -106,7 +111,8 @@ def move():
 
         #move to a well connected tile
         elif len(s.get_adj(s.get_head()))>0:
-            choices_sorted = s.sort(s.get_adj(s.get_head()), lambda e_1, e_2: s.calc_conn(e_1) > s.calc_conn(e_2))
+            #choices_sorted = s.sort(s.get_adj(s.get_head()), lambda e_1, e_2: s.calc_conn_ratio(e_1) > s.calc_conn_ratio(e_2))
+            choices_sorted = s.sort(s.get_adj(s.get_head()), s.compare_conn)
             choice = choices_sorted[0]
             choice_d = s.get_dir(s.get_head(), choice)
             print("ADJ: ",choices_sorted, get_direction(choice_d))
@@ -124,7 +130,8 @@ def move():
 
             #move to a potentially poorly connected tile
             elif len(s.get_adj(s.get_head(),panic=True))>0:
-                choices_sorted = s.sort(s.get_adj(s.get_head(),panic=True), lambda e_1, e_2: s.calc_conn(e_1) > s.calc_conn(e_2))
+                #choices_sorted = s.sort(s.get_adj(s.get_head(),panic=True), lambda e_1, e_2: s.calc_conn_ratio(e_1) > s.calc_conn_ratio(e_2))
+                choices_sorted = s.sort(s.get_adj(s.get_head(),panic=True), s.compare_conn)
                 choice = choices_sorted[0]
                 choice_d = s.get_dir(s.get_head(), choice)
                 print("ADJ PANIC: ",choices_sorted, get_direction(choice_d))
