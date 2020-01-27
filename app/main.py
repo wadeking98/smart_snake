@@ -91,9 +91,7 @@ def move():
     search_type = 0 if (data["turn"] < 50) and len(data["board"]["snakes"]) > 1 else -1
     response = None
 
-    if data["turn"] == 1:
-        print(s.get_head())
-        print(s.board)
+    
         
 
     

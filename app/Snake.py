@@ -12,6 +12,13 @@ class snake:
         self.data = data
         self.board = self.gen_board()
 
+    def to_point(self, dict_point):
+        """
+        @param (dict) dict_point, the dictionary being converted into a point
+        @return (tuple) the converted point
+        """
+        return (dict_point['y'],dict_point['x'])
+
 
     def get_snake(self, point, pt_type):
         """
@@ -33,7 +40,7 @@ class snake:
         """
         snake = self.get_snake(point,-1)
 
-        if snake is None or len(snake["body"]) <= 2:
+        if snake is None or self.pt_eq(self.to_point(snake["body"][-1]),self.to_point(snake["body"][-2])):
             return False
         else:
             return snake["health"] < 100

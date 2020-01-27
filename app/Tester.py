@@ -73,6 +73,54 @@ if __name__ == "__main__":
         }
     }
 
+    # data_test = {
+    #     'game': {
+    #         'id': 'dff4f2ed-db77-4ac4-8eb0-d0073c43bc7a'
+    #     }, 
+    #     'turn': 1, 
+    #     'board': {
+    #         'height': 11, 
+    #         'width': 11, 
+    #         'food': [
+    #             {'x': 8, 'y': 6}, 
+    #             {'x': 0, 'y': 3}, 
+    #             {'x': 5, 'y': 3}, 
+    #             {'x': 5, 'y': 6}, 
+    #             {'x': 10, 'y': 7}, 
+    #             {'x': 6, 'y': 9}, 
+    #             {'x': 1, 'y': 6}, 
+    #             {'x': 8, 'y': 3}], 
+    #             'snakes': [
+    #                 {
+    #                     'id': 'gs_PdM8dDyCM9HyDWjBPwH3mXHR', 
+    #                     'name': 'sean-clarke / go-snake-go-gce', 
+    #                     'health': 99, 
+    #                     'body': [
+    #                         {'x': 1, 'y': 0}, 
+    #                         {'x': 1, 'y': 1}, 
+    #                         {'x': 1, 'y': 1}
+    #                     ]
+    #                 }, 
+    #                 {
+    #                     'id': 'gs_mJjJHBQYwM7KRQqGTyvrCQWW', 
+    #                     'name': 'spechtator / Mr. Noodle2', 
+    #                     'health': 99, 
+    #                     'body': [{'x': 9, 'y': 0}, {'x': 9, 'y': 1}, {'x': 9, 'y': 1}]
+    #                 }, 
+    #                 {
+    #                     'id': 'gs_7vC3h94CrxW8Whj9BtpRfr9Q', 
+    #                     'name': 'petah / Project Z', 
+    #                     'health': 99, 
+    #                     'body': [{'x': 1, 'y': 8}, {'x': 1, 'y': 9}, {'x': 1, 'y': 9}]
+    #                 }, 
+    #                 {
+    #                     'id': 'gs_pxmqHHVDvMSGjwdWYxcDmYWY', 
+    #                     'name': 'rtullybarr / Mamba #5', 
+    #                     'health': 99, 
+    #                     'body': [{'x': 9, 'y': 8}, {'x': 9, 'y': 9}, {'x': 9, 'y': 9}]
+    #                 }, {'id': 'gs_qV4MqbWvM8f93MRkjfrpBCj7', 'name': 'andrewsmith / Decent Snake', 'health': 99, 'body': [{'x': 5, 'y': 8}, {'x': 5, 'y': 9}, {'x': 5, 'y': 9}]}, {'id': 'gs_QpqJFRpxPcyQ8KKRyCrYKCcY', 'name': 'chloeiii / Fine.', 'health': 99, 'body': [{'x': 8, 'y': 5}, {'x': 9, 'y': 5}, {'x': 9, 'y': 5}]}, {'id': 'gs_GtGRHhVXJjP8MfbhSq8hGvQ3', 'name': 'spechtator / Mr. Noodle2', 'health': 99, 'body': [{'x': 1, 'y': 4}, {'x': 1, 'y': 5}, {'x': 1, 'y': 5}]}, {'id': 'gs_W33GKvKRQGcWMxqv6WKxHpBf', 'name': 'wadeking98 / training', 'health': 99, 'body': [{'x': 5, 'y': 2}, {'x': 5, 'y': 1}, {'x': 5, 'y': 1}]}]}, 
+    #                 'you': {'id': 'gs_W33GKvKRQGcWMxqv6WKxHpBf', 'name': 'wadeking98 / training', 'health': 99, 'body': [{'x': 5, 'y': 2}, {'x': 5, 'y': 1}, {'x': 5, 'y': 1}]}}
+
     ts = snake(data_test)
     print(ts.board)
 
@@ -92,7 +140,7 @@ if __name__ == "__main__":
     print(pt_set)
 
     print()
-    print(ts.calc_conn_ratio((14,0)))
+    print(ts.calc_conn_ratio((10,0)))
     print(ts.calc_conn_ratio((0,0)))
 
     print()
@@ -100,7 +148,7 @@ if __name__ == "__main__":
     print(ts.sort(test_arr, lambda e_1, e_2: e_1 > e_2))
 
     print()
-    test_arr_2 = [(0,0),(13,0),(0,1)]
+    test_arr_2 = [(0,0),(9,0),(0,1)]
     print(ts.sort(test_arr_2, lambda e_1, e_2: ts.calc_conn_ratio(e_1)>ts.calc_conn_ratio(e_2)))
 
     print()
@@ -113,21 +161,21 @@ if __name__ == "__main__":
     print(goal_n.depth)
     print(ts.get_dir(path[0], path[1]))
 
-    print(ts.beside_head((0,14)))
-    print(ts.beside_head((0,13)))
+    print(ts.beside_head((0,0)))
+    print(ts.beside_head((0,0)))
 
     print()
 
-    print(ts.can_move((0,14)))
-    print(ts.can_move((0,14),panic=True))
+    print(ts.can_move((0,0)))
+    print(ts.can_move((0,0),panic=True))
     path = ts.LS(-1,[node((0,0))],np.zeros(ts.board.shape),np.zeros(ts.board.shape),panic=True).traceback()
     print(path)
 
     print()
 
     print("testing get adj panic mode")
-    print(ts.get_adj((0,13)))
-    print(ts.get_adj((0,13),panic=True))
+    print(ts.get_adj((0,0)))
+    print(ts.get_adj((0,0),panic=True))
 
     print()
 
@@ -153,7 +201,7 @@ if __name__ == "__main__":
 
     print()
     print("testing get snake")
-    print(ts.get_snake((1,14),0))
+    print(ts.get_snake((1,0),0))
 
     print()
     print("testing can eat")
@@ -161,21 +209,18 @@ if __name__ == "__main__":
 
     print()
     print("testing can_move_tail")
-    print(ts.can_move_tail((1,12)))
+    print(ts.can_move_tail((1,0)))
 
 
     print()
     print("testing modified canmove")
-    print(ts.can_move((14,0)))
+    print(ts.can_move((0,0)))
 
     print()
     print("testing new bug")
-    print(ts.can_move((12,6)))
-    print(ts.can_move((13,6)))
-    print(ts.compare_conn((12,6),(12,5)))
+    print(ts.can_move((1,5)))
+    print(ts.can_move((0,6)))
+    print(ts.compare_conn((0,6),(0,5)))
 
-    print()
-    print("testing bug fix for canmove tail")
-    print(ts.can_move((1,6)))
-    print(ts.LS(0,[node((1,8))],np.zeros(ts.board.shape),np.zeros(ts.board.shape)).traceback())
+
 
