@@ -4,19 +4,28 @@ import random
 import bottle
 import numpy as np
 import time
+import sys
 from Snake import snake
 from Node import node
 
 from api import ping_response, start_response, move_response, end_response
 
 PATH = []
+DEBUG =False
+
+def printD(string):
+    if DEBUG: print(string)
+
 
 @bottle.route('/')
 def index():
-    return '''
-    Battlesnake documentation can be found at
-       <a href="https://docs.battlesnake.io">https://docs.battlesnake.io</a>.
-    '''
+    return {
+        "apiversion": "1",
+        "author" : "Wade King",
+        "color": "#58D68D",
+        "head" : "fang",
+        "tail": "hook"
+    }
 
 @bottle.route('/static/<path:path>')
 def static(path):
@@ -28,36 +37,21 @@ def static(path):
     """
     return bottle.static_file(path, root='static/')
 
-@bottle.post('/ping')
-def ping():
-    """
-    A keep-alive endpoint used to prevent cloud application platforms,
-    such as Heroku, from sleeping the application instance.
-    """
-    return ping_response()
 
 @bottle.post('/start')
 def start():
-    data = bottle.request.json
 
     """
     TODO: If you intend to have a stateful snake AI,
             initialize your snake state here using the
             request's data if necessary.
     """
-
-    color = "#DC7633"
-
-    return {
-            "color": "#58D68D",
-            "headType": "fang",
-            "tailType": "hook"
-            }
+    return None
 
 
 def get_direction(d):
     directions = ['up', 'down', 'left', 'right']
-    dirs = [(-1,0), (1,0), (0,-1), (0,1)]
+    dirs = [(1,0), (-1,0), (0,-1), (0,1)]
 
     for i in range(len(dirs)):
         if d == dirs[i]:
@@ -79,8 +73,8 @@ def move():
     data = bottle.request.json
 
     start_time = time.time()
-
-    print(data['turn'])
+    
+    printD(data['turn'])
 
     """
     TODO: Using the data from the endpoint request object, your
@@ -104,7 +98,7 @@ def move():
         PATH = goal_n.traceback()
         d = s.get_dir(PATH[0], PATH[1])
         #PATH = PATH[1:]
-        print("LS:",PATH,get_direction(d))
+        printD("LS:"+str(PATH)+str(get_direction(d)))
         response = get_direction(d)
 
     #move to a well connected tile
@@ -113,7 +107,7 @@ def move():
         choices_sorted = s.sort(s.get_adj(s.get_head()), s.compare_conn)
         choice = choices_sorted[0]
         choice_d = s.get_dir(s.get_head(), choice)
-        print("ADJ: ",choices_sorted, get_direction(choice_d))
+        printD("ADJ: "+str(choices_sorted)+str(get_direction(choice_d)))
         response = get_direction(choice_d)
 
     #find a potentially poor dls path
@@ -122,7 +116,7 @@ def move():
         if goal_n_poor is not None:
             PATH = goal_n_poor.traceback()
             d = s.get_dir(PATH[0], PATH[1])
-            print("LS PANIC:",get_direction(d))
+            printD("LS PANIC:"+str(get_direction(d)))
             #PATH = PATH[1:]
             response = get_direction(d)
 
@@ -132,7 +126,7 @@ def move():
             choices_sorted = s.sort(s.get_adj(s.get_head(),panic=True), s.compare_conn)
             choice = choices_sorted[0]
             choice_d = s.get_dir(s.get_head(), choice)
-            print("ADJ PANIC: ",choices_sorted, get_direction(choice_d))
+            printD("ADJ PANIC: "+str(choices_sorted)+ str(get_direction(choice_d)))
             response = get_direction(choice_d)
         
         #move randomly
@@ -146,21 +140,6 @@ def move():
     print(str((end_time-start_time)*1000)+"ms")
     return move_response(response)
 
-    
-    
-        
-
-    
-        
-    
-    
-
-    
-    
-    directions = ['up', 'down', 'left', 'right']
-    direction = random.choice(directions)
-
-    return move_response(direction)
 
 
 @bottle.post('/end')
@@ -178,6 +157,8 @@ def end():
 application = bottle.default_app()
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1 and sys.argv[1] == "debug":
+        DEBUG = True
     bottle.run(
         application,
         host=os.getenv('IP', '0.0.0.0'),

@@ -7,8 +7,8 @@ class snake:
     
 
     def __init__(self, data):
-        self.DIRS = [(-1,0),(1,0),(0,-1),(0,1)]
-        self.DIRS_KEY = {"up":(-1,0),"down":(1,0),"left":(0,-1),"right":(0,1)}
+        self.DIRS = [(1,0),(-1,0),(0,-1),(0,1)]
+        self.DIRS_KEY = {"up":(1,0),"down":(-1,0),"left":(0,-1),"right":(0,1)}
         self.data = data
         self.board = self.gen_board()
 
@@ -84,7 +84,6 @@ class snake:
         """
         ret = []
         if len(pt_a) != len(pt_b):
-            print(pt_a,pt_b)
             return None
         else:
             for i in range(len(pt_a)):
