@@ -1,0 +1,44 @@
+apiVersion: v1
+items:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: snake
+      app-group: battle_snake
+      name: smartsnake
+    name: smartsnake
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: snake
+      app-group: battle_snake
+      name: smartsnake
+    name: smartsnake
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: smartsnake:latest
+    resources:
+      limits:
+        cpu: "1"
+        memory: 1Gi
+      requests:
+        cpu: 250m
+        memory: 1Gi
+    source:
+      contextDir: .
+      git:
+        ref: master
+        uri: https://github.com/wadeking98/smart_snake.git
+      type: Git
+    strategy:
+      dockerStrategy:
+        dockerfilePath: Dockerfile
+      type: Docker
+    triggers:
+    - type: ConfigChange
+kind: List
+metadata: {}

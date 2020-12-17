@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import math
 from Node import node
 
 
@@ -77,8 +78,9 @@ class snake:
         """
         return (self.data["you"]["body"][0]["y"],self.data["you"]["body"][0]["x"])
 
-    def add_points(self, pt_a, pt_b):
+    def add_points(self, pt_a, pt_b, mult=1):
         """
+        @param (int) 1 or -1 to change between add/sub
         @param (tuple) pt_a, pt_b
         @return (tuple) element wise sum of pt_a, pt_b
         """
@@ -87,7 +89,7 @@ class snake:
             return None
         else:
             for i in range(len(pt_a)):
-                ret.append(pt_a[i]+pt_b[i])
+                ret.append(pt_a[i]+pt_b[i]*mult)
         return tuple(ret)
 
     def in_bounds(self, point):
@@ -281,13 +283,22 @@ class snake:
         
         return tuple(subt)
 
-    
+    def get_dist(self,pt1, pt2):
+        pt1_2 = self.add_points(pt2,pt1,-1)
+        return math.sqrt(pt1_2[0]**2 + pt1_2[1]**2)
+        
+
     def compare(self, p1, p2):
         """
         @param (tuple) p1, the first point in question
         @param (tuple) p2, the second point in question
         @return (bool) true if p1 has higher degree than p2
         """
+        if(self.deg(p1) == self.deg(p2)):
+            middle = self.to_point({"y":self.data["board"]["height"]/2, "x":self.data["board"]["width"]/2})
+            d1 = self.get_dist(p1,middle)
+            d2 = self.get_dist(p2, middle)
+            return d1 < d2
         return self.deg(p1) > self.deg(p2)
 
     def compare_conn(self,p1,p2):

@@ -78,7 +78,7 @@
         "displayName": "Name",
         "description": "The name assigned to all of the resources defined in this template.",
         "required": true,
-        "value": "smart_snake"
+        "value": "smartsnake"
       },
       {
         "name": "APP_NAME",

@@ -222,5 +222,19 @@ if __name__ == "__main__":
     print(ts.can_move((0,6)))
     print(ts.compare_conn((0,6),(0,5)))
 
+    print()
+    print(ts.board)
+    print(ts.board[1][7])
+    print(ts.deg((2,7)))
+
+    print()
+    print("distance")
+    print(ts.get_dist((1,5),(11,11)))
+
+    print()
+    print("distance compare")
+    print(ts.compare((1,1),(2,8)))
+ 
+
 
 
