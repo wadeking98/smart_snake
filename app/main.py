@@ -82,7 +82,7 @@ def move():
     """
     s = snake(data)
     thresh = 0.7
-    search_type = 0 if (data["turn"] < 50) and len(data["board"]["snakes"]) > 1 else -1
+    search_type = 0 if (data["turn"] < 25) and len(data["board"]["snakes"]) > 1 else -1
     response = None
 
     
